@@ -1,0 +1,41 @@
+import java.util.*; 
+import java.io.*; 
+
+public class Solution {
+    public static int fun(int[] wt, int[] v, int n, int w, int[][] dp) {
+        // Base case: no items left or no capacity left
+        if (n == -1 || w == 0) {
+            return 0;
+        }
+
+        // Return the cached result if already computed
+        if (dp[n][w] != -1) {
+            return dp[n][w];
+        }
+
+        // Option to not take the item
+        int not_take = fun(wt, v, n - 1, w, dp);
+
+        // Option to take the item
+        int take = Integer.MIN_VALUE;
+        if (wt[n] <= w) {
+            take = v[n] + fun(wt, v, n - 1, w - wt[n], dp);
+        }
+
+        // Store the result in the dp array
+        dp[n][w] = Math.max(not_take, take);
+        return dp[n][w];
+    }
+
+    static int knapsack(int[] wt, int[] v, int n, int w) {
+        // Create dp array with all entries initialized to -1
+        int[][] dp = new int[n][w + 1];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+
+        // Call the recursive function with memoization
+        return fun(wt, v, n - 1, w, dp);
+    }
+
+}
